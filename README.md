@@ -2,6 +2,17 @@
 
 A Model Context Protocol (MCP) server that provides weather data via the OpenWeather API. Built with FastMCP, fully tested with pytest, and containerized with Docker.
 
+## Demo
+
+### get_current_weather
+![get_current_weather](assets/demo-current-weather.png)
+
+### get_forecast
+![get_forecast](assets/demo-forecast.png)
+
+### get_weather_by_coords
+![get_weather_by_coords](assets/demo-coords.png)
+
 ## Features
 
 - `get_current_weather(city)` — Current weather by city name
