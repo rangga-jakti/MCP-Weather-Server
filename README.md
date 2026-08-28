@@ -86,6 +86,7 @@ Get a free OpenWeather API key at [openweathermap.org](https://openweathermap.or
 | `get_current_weather` | `city: str` | Current weather by city |
 | `get_forecast` | `city: str`, `days: int (1-5)` | Multi-day forecast |
 | `get_weather_by_coords` | `lat: float`, `lon: float` | Weather by coordinates |
+| `get_air_quality` | `city: str` | AQI & pollutant levels (CO, NO2, O3, PM2.5, dll) |
 
 ## Project Structure
 
