@@ -85,7 +85,7 @@ class OpenWeatherClient:
             "q": city,
             "appid": self.api_key,
             "units": self.units,
-            "cnt": days * 8,  # 8 intervals per day (every 3 hours)
+            "cnt": days * 8,
         }
         async with httpx.AsyncClient() as client:
             response = await client.get(f"{self.base_url}/forecast", params=params)
@@ -130,3 +130,56 @@ class OpenWeatherClient:
                 data = response.json()
                 self._handle_error(response.status_code, data.get("message", "Unknown error"))
         return self._parse_current(response.json(), lat=lat, lon=lon)
+
+    async def get_air_quality(self, city: str) -> "AirQuality":
+        from .models import AirQuality, AirQualityComponents, AQI_LABELS
+
+        params_geo = {
+            "q": city,
+            "appid": self.api_key,
+            "units": self.units,
+        }
+        async with httpx.AsyncClient() as client:
+            geo_resp = await client.get(f"{self.base_url}/weather", params=params_geo)
+            if geo_resp.status_code != 200:
+                data = geo_resp.json()
+                self._handle_error(geo_resp.status_code, data.get("message", "Unknown error"))
+            geo_data = geo_resp.json()
+            lat = geo_data["coord"]["lat"]
+            lon = geo_data["coord"]["lon"]
+
+        params = {
+            "lat": lat,
+            "lon": lon,
+            "appid": self.api_key,
+        }
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                "http://api.openweathermap.org/data/2.5/air_pollution",
+                params=params
+            )
+            if response.status_code != 200:
+                data = response.json()
+                self._handle_error(response.status_code, data.get("message", "Unknown error"))
+
+        data = response.json()
+        item = data["list"][0]
+        aqi = item["main"]["aqi"]
+        components = item["components"]
+
+        return AirQuality(
+            lat=lat,
+            lon=lon,
+            aqi=aqi,
+            aqi_label=AQI_LABELS[aqi],
+            components=AirQualityComponents(
+                co=components["co"],
+                no=components["no"],
+                no2=components["no2"],
+                o3=components["o3"],
+                so2=components["so2"],
+                pm2_5=components["pm2_5"],
+                pm10=components["pm10"],
+                nh3=components["nh3"],
+            ),
+        )

@@ -2,6 +2,7 @@ from fastmcp import FastMCP
 
 from .client import OpenWeatherClient
 from .exceptions import WeatherAPIError
+from .models import CurrentWeather, CoordWeather, WeatherForecast, AirQuality
 
 mcp = FastMCP(
     name="mcp-weather-server",
@@ -83,3 +84,20 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+@mcp.tool()
+async def get_air_quality(city: str) -> dict:
+    """
+    Get air quality index and pollutant levels for a city.
+
+    Args:
+        city: City name (e.g. 'Jakarta', 'London')
+
+    Returns:
+        AQI (1=Good to 5=Very Poor) and pollutant concentrations in μg/m³.
+    """
+    try:
+        air = await client.get_air_quality(city)
+        return air.model_dump()
+    except WeatherAPIError as e:
+        return {"error": str(e), "status_code": e.status_code}

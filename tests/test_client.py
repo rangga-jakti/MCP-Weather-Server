@@ -2,6 +2,7 @@ import pytest
 import respx
 import httpx
 
+from weather.models import AirQuality
 from weather.client import OpenWeatherClient
 from weather.exceptions import (
     CityNotFoundError,
@@ -141,3 +142,47 @@ class TestGetWeatherByCoords:
 
         with pytest.raises(WeatherServiceUnavailableError):
             await weather_client.get_weather_by_coords(-6.2, 106.8)
+
+MOCK_AIR_QUALITY = {
+    "list": [
+        {
+            "main": {"aqi": 2},
+            "components": {
+                "co": 201.94,
+                "no": 0.0,
+                "no2": 0.44,
+                "o3": 68.66,
+                "so2": 0.64,
+                "pm2_5": 0.5,
+                "pm10": 0.54,
+                "nh3": 0.11,
+            },
+        }
+    ]
+}
+
+class TestGetAirQuality:
+    @respx.mock
+    async def test_success(self, weather_client, mock_current_response):
+        respx.get(f"{BASE_URL}/weather").mock(
+            return_value=httpx.Response(200, json=mock_current_response)
+        )
+        respx.get("http://api.openweathermap.org/data/2.5/air_pollution").mock(
+            return_value=httpx.Response(200, json=MOCK_AIR_QUALITY)
+        )
+
+        result = await weather_client.get_air_quality("Jakarta")
+
+        assert isinstance(result, AirQuality)
+        assert result.aqi == 2
+        assert result.aqi_label == "Fair"
+        assert result.components.co == 201.94
+
+    @respx.mock
+    async def test_city_not_found(self, weather_client):
+        respx.get(f"{BASE_URL}/weather").mock(
+            return_value=httpx.Response(404, json={"message": "city not found"})
+        )
+
+        with pytest.raises(CityNotFoundError):
+            await weather_client.get_air_quality("InvalidCity")
