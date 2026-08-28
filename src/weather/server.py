@@ -2,7 +2,6 @@ from fastmcp import FastMCP
 
 from .client import OpenWeatherClient
 from .exceptions import WeatherAPIError
-from .models import CurrentWeather, CoordWeather, WeatherForecast, AirQuality
 
 mcp = FastMCP(
     name="mcp-weather-server",
@@ -78,13 +77,6 @@ async def get_weather_by_coords(lat: float, lon: float) -> dict:
         return {"error": str(e), "status_code": e.status_code}
 
 
-def main():
-    mcp.run()
-
-
-if __name__ == "__main__":
-    main()
-
 @mcp.tool()
 async def get_air_quality(city: str) -> dict:
     """
@@ -101,3 +93,11 @@ async def get_air_quality(city: str) -> dict:
         return air.model_dump()
     except WeatherAPIError as e:
         return {"error": str(e), "status_code": e.status_code}
+
+
+def main():
+    mcp.run()
+
+
+if __name__ == "__main__":
+    main()
