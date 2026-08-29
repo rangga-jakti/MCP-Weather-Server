@@ -1,6 +1,6 @@
 import pytest
-from weather.client import OpenWeatherClient
 
+from weather.client import OpenWeatherClient
 
 MOCK_CURRENT_WEATHER = {
     "name": "Jakarta",

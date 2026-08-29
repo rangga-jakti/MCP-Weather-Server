@@ -35,7 +35,9 @@ class ForecastItem(BaseModel):
     humidity: int
     wind_speed: float
     condition: WeatherCondition
-    rain_probability: float = Field(default=0.0, description="Probability of precipitation (0-1)")
+    rain_probability: float = Field(
+        default=0.0, description="Probability of precipitation (0-1)"
+    )
 
 
 class WeatherForecast(BaseModel):
@@ -47,41 +49,25 @@ class WeatherForecast(BaseModel):
 class CoordWeather(CurrentWeather):
     lat: float
     lon: float
+
+
 class AirQualityComponents(BaseModel):
-    co: float = Field(description="Carbon monoxide (μg/m³)")
-    no: float = Field(description="Nitrogen monoxide (μg/m³)")
-    no2: float = Field(description="Nitrogen dioxide (μg/m³)")
-    o3: float = Field(description="Ozone (μg/m³)")
-    so2: float = Field(description="Sulphur dioxide (μg/m³)")
-    pm2_5: float = Field(description="Fine particles (μg/m³)")
-    pm10: float = Field(description="Coarse particles (μg/m³)")
-    nh3: float = Field(description="Ammonia (μg/m³)")
+    co: float = Field(description="Carbon monoxide (ug/m3)")
+    no: float = Field(description="Nitrogen monoxide (ug/m3)")
+    no2: float = Field(description="Nitrogen dioxide (ug/m3)")
+    o3: float = Field(description="Ozone (ug/m3)")
+    so2: float = Field(description="Sulphur dioxide (ug/m3)")
+    pm2_5: float = Field(description="Fine particles PM2.5 (ug/m3)")
+    pm10: float = Field(description="Coarse particles PM10 (ug/m3)")
+    nh3: float = Field(description="Ammonia (ug/m3)")
 
 
 class AirQuality(BaseModel):
     lat: float
     lon: float
-    aqi: int = Field(description="Air Quality Index: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor")
+    aqi: int = Field(description="AQI: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor")
     aqi_label: str
     components: AirQualityComponents
 
-
-class AirQualityComponents(BaseModel):
-    co: float = Field(description="Carbon monoxide (μg/m³)")
-    no: float = Field(description="Nitrogen monoxide (μg/m³)")
-    no2: float = Field(description="Nitrogen dioxide (μg/m³)")
-    o3: float = Field(description="Ozone (μg/m³)")
-    so2: float = Field(description="Sulphur dioxide (μg/m³)")
-    pm2_5: float = Field(description="Fine particles PM2.5 (μg/m³)")
-    pm10: float = Field(description="Coarse particles PM10 (μg/m³)")
-    nh3: float = Field(description="Ammonia (μg/m³)")
-
-
-class AirQuality(BaseModel):
-    lat: float
-    lon: float
-    aqi: int = Field(description="Air Quality Index: 1=Good, 2=Fair, 3=Moderate, 4=Poor, 5=Very Poor")
-    aqi_label: str
-    components: AirQualityComponents
 
 AQI_LABELS = {1: "Good", 2: "Fair", 3: "Moderate", 4: "Poor", 5: "Very Poor"}

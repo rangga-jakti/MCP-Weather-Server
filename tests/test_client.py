@@ -1,18 +1,15 @@
+import httpx
 import pytest
 import respx
-import httpx
 
-from weather.models import AirQuality
-from weather.client import OpenWeatherClient
 from weather.exceptions import (
     CityNotFoundError,
     InvalidAPIKeyError,
     RateLimitError,
-    WeatherServiceUnavailableError,
     WeatherAPIError,
+    WeatherServiceUnavailableError,
 )
-from weather.models import CurrentWeather, CoordWeather, WeatherForecast
-
+from weather.models import AirQuality, CoordWeather, CurrentWeather, WeatherForecast
 
 BASE_URL = "https://api.openweathermap.org/data/2.5"
 

@@ -1,9 +1,10 @@
 import pytest
+
 from weather.exceptions import (
-    WeatherAPIError,
     CityNotFoundError,
     InvalidAPIKeyError,
     RateLimitError,
+    WeatherAPIError,
     WeatherServiceUnavailableError,
 )
 

@@ -131,8 +131,8 @@ class OpenWeatherClient:
                 self._handle_error(response.status_code, data.get("message", "Unknown error"))
         return self._parse_current(response.json(), lat=lat, lon=lon)
 
-    async def get_air_quality(self, city: str) -> "AirQuality":
-        from .models import AirQuality, AirQualityComponents, AQI_LABELS
+    async def get_air_quality(self, city: str) :
+        from .models import AQI_LABELS, AirQuality, AirQualityComponents
 
         params_geo = {
             "q": city,

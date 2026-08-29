@@ -1,9 +1,14 @@
-import pytest
 from unittest.mock import AsyncMock, patch
 
-from weather.models import CurrentWeather, CoordWeather, WeatherForecast, WeatherCondition, ForecastItem
-from weather.exceptions import CityNotFoundError, InvalidAPIKeyError, RateLimitError
 from weather import server
+from weather.exceptions import CityNotFoundError, InvalidAPIKeyError, RateLimitError
+from weather.models import (
+    CoordWeather,
+    CurrentWeather,
+    ForecastItem,
+    WeatherCondition,
+    WeatherForecast,
+)
 
 
 def make_current_weather(**kwargs) -> CurrentWeather:
